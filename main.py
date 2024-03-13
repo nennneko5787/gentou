@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 from keep_alive import keep_alive
 
-client = discord.Client(intents=discord.Intents.all())
+client = discord.Client(intents=discord.Intents.default())
 JIHOU_CHANNEL_ID = 1208730354656084008 #チャンネルID
 
 @client.event
