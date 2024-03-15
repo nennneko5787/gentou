@@ -6,6 +6,7 @@ import os
 from keep_alive import keep_alive
 from zoneinfo import ZoneInfo
 import psutil
+import aiohttp
 
 client = discord.Client(intents=discord.Intents.default())
 tree = app_commands.CommandTree(client=client)
@@ -29,6 +30,18 @@ async def ping(interaction: discord.Interaction):
 	embed = discord.Embed(title="Ping", description=f"Ping : {ping*1000}ms\nCPU : {cpu_percent}%\nMemory : {mem.percent}%", color=discord.Colour.gold())
 	embed.set_thumbnail(url=client.user.display_avatar.url)
 	await interaction.response.send_message(embed=embed)
+
+@tree.command(name="genshin_userinfo", description="UIDからユーザーの情報を確認できます")
+async def ping(interaction: discord.Interaction, uid: str):
+    await interaction.response.defer()
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f'https://enka.network/api/uid/{uid}') as response:
+            if response.status != 404:
+                user = await response.json()
+            else:
+                embed = discord.Embed(title="ユーザーが見つかりませんでした。", description="UIDが間違っていないか、確認してください。")
+                await interaction.followup.send()
+    embed = discord.Embed(title=f"{user['playerInfo']['nickname']} の情報",description=f"レベル: **{user['playerInfo']['level']}**\n自己紹介: \n```\n{user['playerInfo']['signature']}\n```")
 
 # 60秒に一回ループ
 @tasks.loop(seconds=60)
