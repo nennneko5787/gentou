@@ -42,6 +42,7 @@ async def ping(interaction: discord.Interaction, uid: str):
                 embed = discord.Embed(title="ユーザーが見つかりませんでした。", description="UIDが間違っていないか、確認してください。")
                 await interaction.followup.send()
     embed = discord.Embed(title=f"{user['playerInfo']['nickname']} の情報",description=f"レベル: **{user['playerInfo']['level']}**\n自己紹介: \n```\n{user['playerInfo']['signature']}\n```")
+    await interaction.followup.send(embed=embed)
 
 # 60秒に一回ループ
 @tasks.loop(seconds=60)
