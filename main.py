@@ -20,7 +20,7 @@ async def setup_hook():
 async def on_ready():
     await tree.sync()
     print("起動!")
-    await client.change_presence(activity=discord.Game(name="幻塔"))
+    change.start()
 
 @tree.command(name="ping", description="pingを計測します")
 async def ping(interaction: discord.Interaction):
@@ -43,6 +43,39 @@ async def ping(interaction: discord.Interaction, uid: str):
                 await interaction.followup.send()
     embed = discord.Embed(title=f"{user['playerInfo']['nickname']} の情報",description=f"レベル: **{user['playerInfo']['level']}**\n自己紹介: \n```\n{user['playerInfo']['signature']}\n```")
     await interaction.followup.send(embed=embed)
+
+# チャンネル入退室時の通知処理
+@client.event
+async def on_voice_state_update(member, before, after):
+    # チャンネルへの入室ステータスが変更されたとき（ミュートON、OFFに反応しないように分岐）
+    if before.channel != after.channel:
+        # 通知メッセージを書き込むテキストチャンネル（チャンネルIDを指定）
+        botRoom = client.get_channel(1208724530445422592)
+
+        # 入退室を監視する対象のボイスチャンネル（チャンネルIDを指定）
+        announceChannelIds = [1209040270553784330, 1218143184778039357, 1218151477395329064, 1218151616725909606, 1218151648732647594]
+
+        now = datetime.now(ZoneInfo("Asia/Tokyo")).timestamp()
+
+        #if before.channel is None:
+        #    msg = f'> `{now:%m/%d-%H:%M}` に `{member.name}` が `{after.channel.name}` に`参加`しまシたでシ。'
+        #    await alert_channel.send(msg)
+        #elif after.channel is None:
+        #    msg = f'> `{now:%m/%d-%H:%M}` に `{member.name}` が `{before.channel.name}` から`退出`しまスた。'
+        #    await alert_channel.send(msg)
+
+        # 退室通知
+        if before.channel is not None and before.channel.id in announceChannelIds:
+            await botRoom.send(f"**<t:{now}:f>**に、**<#{before.channel.id}>**から、__{member.mention}__が`退出`しまスた。")
+        # 入室通知
+        if after.channel is not None and after.channel.id in announceChannelIds:
+            await botRoom.send(f"**<t:{now}:f>**に、**<#{after.channel.id}>** に、__{member.mention}__が`参加`しまシたでシ。")
+
+@tasks.loop(seconds=20)
+async def change():
+    status = discord.Status.online
+    game = discord.Game(name="幻塔")
+    await client.change_presence(status=status, activity=game)
 
 # 60秒に一回ループ
 @tasks.loop(seconds=60)
