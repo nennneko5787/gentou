@@ -55,7 +55,7 @@ async def on_voice_state_update(member, before, after):
         # 入退室を監視する対象のボイスチャンネル（チャンネルIDを指定）
         announceChannelIds = [1209040270553784330, 1218143184778039357, 1218151477395329064, 1218151616725909606, 1218151648732647594]
 
-        now = datetime.now(ZoneInfo("Asia/Tokyo")).timestamp()
+        now = int(datetime.now(ZoneInfo("Asia/Tokyo")).timestamp())
 
         #if before.channel is None:
         #    msg = f'> `{now:%m/%d-%H:%M}` に `{member.name}` が `{after.channel.name}` に`参加`しまシたでシ。'
