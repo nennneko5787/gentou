@@ -66,10 +66,10 @@ async def on_voice_state_update(member, before, after):
 
         # 退室通知
         if before.channel is not None and before.channel.id in announceChannelIds:
-            await botRoom.send(f"**<t:{now}:f>**に、**<#{before.channel.id}>**から、__{member.mention}__が`退出`しまスた。")
+            await botRoom.send(f"**<t:{now}:f>**に、**<#{before.channel.id}>**から、__{member.mention}__が`退出`しまスた。", silent=True)
         # 入室通知
         if after.channel is not None and after.channel.id in announceChannelIds:
-            await botRoom.send(f"**<t:{now}:f>**に、**<#{after.channel.id}>** に、__{member.mention}__が`参加`しまシたでシ。")
+            await botRoom.send(f"**<t:{now}:f>**に、**<#{after.channel.id}>** に、__{member.mention}__が`参加`しまシたでシ。", silent=True)
 
 @tasks.loop(seconds=20)
 async def change():
