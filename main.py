@@ -29,11 +29,11 @@ async def on_message(message):
 	if message.author.bot:
 		return
 	if message.clean_content == 'おはよう':
-		await message.channel.send('> `おはよう…うももも…ももも…ももももも…&*@!!?&...`', silent=True)
+		await message.reply('> `おはよう…うももも…ももも…ももももも…&*@!!?&...`', silent=True)
 	elif message.clean_content == 'よろしく' or message.clean_content == 'よろ':
-		await message.channel.send('`よろしくお願いしまスた!`', silent=True)
+		await message.reply('`よろしくお願いしまスた!`', silent=True)
 	elif message.clean_content == 'おやすみ':
-		await message.channel.send('https://pbs.twimg.com/media/Fj8xGYAakAAYkyy?format=png&name=small', silent=True)
+		await message.reply('https://pbs.twimg.com/media/Fj8xGYAakAAYkyy?format=png&name=small', silent=True)
 
 @tree.command(name="ping", description="pingを計測します")
 async def ping(interaction: discord.Interaction):
