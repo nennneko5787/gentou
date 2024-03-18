@@ -26,11 +26,11 @@ async def on_ready():
 async def on_message(message):
 	if message.author.bot:
 		return
-	if message.content == 'おはよう':
+	if message.clean_content == 'おはよう':
 		await message.channel.send('> `おはよう…うももも…ももも…ももももも…&*@!!?&...`', silent=True)
-	elif message.content == 'よろしく':
+	elif message.clean_content == 'よろしく':
 		await message.channel.send('`よろしくお願いしまスた!`', silent=True)
-	elif message.content == 'おやすみ':
+	elif message.clean_content == 'おやすみ':
 		await message.channel.send('https://pbs.twimg.com/media/Fj8xGYAakAAYkyy?format=png&name=small', silent=True)
 
 @tree.command(name="ping", description="pingを計測します")
