@@ -8,7 +8,9 @@ from zoneinfo import ZoneInfo
 import psutil
 import aiohttp
 
-client = discord.Client(intents=discord.Intents.default())
+intents = discord.Intents.default()
+intents.message_content = True
+client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client=client)
 JIHOU_CHANNEL_ID = 1208730354656084008 #チャンネルID
 
