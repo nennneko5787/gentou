@@ -8,6 +8,7 @@ from zoneinfo import ZoneInfo
 import psutil
 import aiohttp
 from enkanetwork import EnkaNetworkAPI
+import asyncpg
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -15,6 +16,12 @@ client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client=client)
 enka = EnkaNetworkAPI()
 JIHOU_CHANNEL_ID = 1208730354656084008 #チャンネルID
+
+# Database configuration
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+async def connect_to_database():
+	return await asyncpg.connect(DATABASE_URL)
 
 @client.event
 async def setup_hook():
@@ -46,9 +53,50 @@ async def ping(interaction: discord.Interaction):
 	embed.set_thumbnail(url=client.user.display_avatar.url)
 	await interaction.response.send_message(embed=embed)
 
-@tree.command(name="genshin_userinfo", description="UIDからユーザーの情報を確認できます")
-async def ping(interaction: discord.Interaction, uid: str):
+@tree.command(name="genshin_setuid", description="あなたのDiscordアカウントに原神のUIDをセットできます")
+@app_commands.describe(uid="あなたの原神のUID")
+async def genshin_setuid(interaction: discord.Interaction, uid: str):
 	await interaction.response.defer()
+	connection = await connect_to_database()
+	await connection.execute(
+		"""
+		INSERT INTO member_data (id, genshin_uid)
+		VALUES ($1, $2)
+		ON CONFLICT (id) DO UPDATE
+		SET genshin_uid = $2
+		""",
+		interaction.user.id,
+		uid
+	)
+	embed = discord.Embed(
+		title="UIDをセットしました。",
+		color=discord.Colour.green()
+	)
+	await interaction.followup.send(embed=embed)
+
+@tree.command(name="genshin_userinfo", description="UIDからユーザーの情報を確認できます")
+@app_commands.describe(uid="あなたの原神のUID", user="ステータスを確認したいユーザー(uidを指定した場合、無視されます)")
+async def genshin_userinfo(interaction: discord.Interaction, uid: str = None, user: discord.User = None):
+	await interaction.response.defer()
+	if user == None:
+		user = interaction.user
+	if uid == None:
+		connection = await connect_to_database()
+		uid = await connection.fetchval(
+			"""
+			SELECT genshin_uid FROM member_data WHERE id = $1
+			""",
+			user.id,
+		)
+		if uid == None:
+			embed = discord.Embed(
+				title=f"{user.mention}はUIDをセットしていません！",
+				description="`/genshin_setuid`コマンドを使用し、UIDをセットするか、このコマンドの引数に`uid`を指定してください。"
+				color=discord.Colour.red()
+			)
+			await interaction.followup.send(embed=embed)
+			return
+
 	async with enka:
 		data = await client.fetch_user(uid)
 	embed = discord.Embed(

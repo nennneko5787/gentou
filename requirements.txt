@@ -2,3 +2,4 @@ discord.py
 Flask
 psutil
 enkanetwork.py
+asyncpg
