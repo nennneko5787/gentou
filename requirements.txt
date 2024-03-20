@@ -1,5 +1,5 @@
 discord.py
 Flask
 psutil
-enkanetwork.py
+git+https://github.com/mrwan200/EnkaNetwork.py
 asyncpg
