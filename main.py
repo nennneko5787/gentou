@@ -54,7 +54,11 @@ async def ping(interaction: discord.Interaction, uid: str):
 			else:
 				embed = discord.Embed(title="ユーザーが見つかりませんでした。", description="UIDが間違っていないか、確認してください。")
 				await interaction.followup.send()
-	embed = discord.Embed(title=f"{user['playerInfo']['nickname']} の情報",description=f"レベル: **{user['playerInfo']['level']}**\n自己紹介: \n```\n{user['playerInfo']['signature']}\n```")
+	embed = discord.Embed(
+		title=f"{user['playerInfo']['nickname']} の情報",
+		description=f"レベル: **{user['playerInfo']['level']}**\n世界ランク: **{user['playerinfo'].get('worldLevel',None)}**\n凱旋の階層: **{user['playerinfo'].get('towerFloorIndex',None)}**\n凱旋のレベル: **{user['playerinfo'].get('towerLevelIndex',None)}**\n自己紹介: \n```\n{user['playerInfo']['signature']}\n```"
+		)
+	embed.add_field(name="Noneと書かれている項目がある場合は？",value="1. パイモンメニュー > プロフィール編集 を開く\n2. キャラクターラインナップで表示するキャラクターを選択する\n3. キャラ詳細表示中にする\n4. パイモンメニューを閉じる\n\n反映までおよそ5分かかります。5分後を過ぎてから再度実行してください。")
 	await interaction.followup.send(embed=embed)
 
 # チャンネル入退室時の通知処理
