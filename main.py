@@ -98,7 +98,7 @@ async def genshin_userinfo(interaction: discord.Interaction, uid: str = None, us
 			return
 
 	async with enka:
-		data = await client.fetch_user(uid)
+		data = await enka.fetch_user(uid)
 	embed = discord.Embed(
 		title=f"ステータス",
 		description=f"レベル: **{data.player.level}**\n世界ランク: **{data.player.world_level}**\n螺旋: **{data.player.abyss_floor}層 {data.player.abyss_room}間**\n達成したアチーブメント数: **{data.player.achievement}**\n自己紹介: \n```\n{data.player.signature}\n```"
