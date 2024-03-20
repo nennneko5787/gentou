@@ -60,12 +60,13 @@ async def ping(interaction: discord.Interaction, uid: str):
 			else:
 				embed = discord.Embed(title="ユーザーアイコンの取得に失敗しました。", description="Githubが悪い、~~ころすぞ~~")
 				await interaction.followup.send()
+	guo = f"{user['playerInfo'].get('profilePicture', {}).get('id', 1)}"
 	embed = discord.Embed(
 		title=f"ステータス",
 		description=f"レベル: **{user['playerInfo'].get('level', None)}**\n世界ランク: **{user['playerInfo'].get('worldLevel', None)}**\n螺旋: **{user['playerInfo'].get('towerFloorIndex', None)}層 {user['playerInfo'].get('towerLevelIndex', None)}間**\n達成したアチーブメント数: **{user['playerInfo'].get('finishAchievementNum', None)}**\n自己紹介: \n```\n{user['playerInfo'].get('signature', None)}\n```"
 	).set_author(
 		name=user['playerInfo'].get('nickname', None),
-		icon_url=f"https://enka.network/ui/{characters.get[user['playerInfo']['profilePicture']['id']]}.png"
+		icon_url=f"https://enka.network/ui/{characters.get(guo, 'UI_AvatarIcon_PlayerBoy_Circle')}.png"
 	)
 	embed.add_field(name="Noneと書かれている項目がある場合は？",value="1. パイモンメニュー > プロフィール編集 を開く\n2. キャラクターラインナップで表示するキャラクターを選択する\n3. キャラ詳細表示中にする\n4. パイモンメニューを閉じる\n\n反映までおよそ5分かかります。5分後を過ぎてから再度実行してください。")
 	await interaction.followup.send(embed=embed)
