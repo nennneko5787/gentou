@@ -55,7 +55,7 @@ async def ping(interaction: discord.Interaction):
 
 @tree.command(name="genshin_setuid", description="あなたのDiscordアカウントに原神のUIDをセットできます")
 @app_commands.describe(uid="あなたの原神のUID")
-async def genshin_setuid(interaction: discord.Interaction, uid: int):
+async def genshin_setuid(interaction: discord.Interaction, uid: str):
 	await interaction.response.defer()
 	connection = await connect_to_database()
 	await connection.execute(
@@ -76,7 +76,7 @@ async def genshin_setuid(interaction: discord.Interaction, uid: int):
 
 @tree.command(name="genshin_userinfo", description="UIDからユーザーの情報を確認できます")
 @app_commands.describe(uid="あなたの原神のUID", user="ステータスを確認したいユーザー(uidを指定した場合、無視されます)")
-async def genshin_userinfo(interaction: discord.Interaction, uid: int = None, user: discord.User = None):
+async def genshin_userinfo(interaction: discord.Interaction, uid: str = None, user: discord.User = None):
 	await interaction.response.defer()
 	if user == None:
 		user = interaction.user
@@ -98,7 +98,7 @@ async def genshin_userinfo(interaction: discord.Interaction, uid: int = None, us
 			return
 
 	async with enka:
-		data = await enka.fetch_user(uid)
+		data = await enka.fetch_user(str(uid))
 	embed = discord.Embed(
 		title=f"ステータス",
 		description=f"レベル: **{data.player.level}**\n世界ランク: **{data.player.world_level}**\n螺旋: **{data.player.abyss_floor}層 {data.player.abyss_room}間**\n達成したアチーブメント数: **{data.player.achievement}**\n自己紹介: \n```\n{data.player.signature}\n```"
