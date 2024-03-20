@@ -91,7 +91,7 @@ async def genshin_userinfo(interaction: discord.Interaction, uid: str = None, us
 		if uid == None:
 			embed = discord.Embed(
 				title=f"{user.mention}はUIDをセットしていません！",
-				description="`/genshin_setuid`コマンドを使用し、UIDをセットするか、このコマンドの引数に`uid`を指定してください。"
+				description="`/genshin_setuid`コマンドを使用し、UIDをセットするか、このコマンドの引数に`uid`を指定してください。",
 				color=discord.Colour.red()
 			)
 			await interaction.followup.send(embed=embed)
