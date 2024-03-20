@@ -73,7 +73,7 @@ async def genshin_setuid(interaction: discord.Interaction, uid: str):
 	await interaction.followup.send(embed=embed)
 
 @tree.command(name="genshin_userinfo", description="UIDからユーザーの情報を確認できます")
-@app_commands.describe(uid="あなたの原神のUID", user="ステータスを確認したいユーザー(uidを指定した場合、無視されます)")
+@app_commands.describe(uid="確認したいプレイヤーの原神のUID", user="ステータスを確認したいユーザー(uidを指定した場合、無視されます)")
 async def genshin_userinfo(interaction: discord.Interaction, uid: str = None, user: discord.User = None):
 	await interaction.response.defer()
 	if user == None:
@@ -116,7 +116,6 @@ async def genshin_userinfo(interaction: discord.Interaction, uid: str = None, us
 		name=user['playerInfo'].get('nickname', None),
 		icon_url=f"https://enka.network/ui/{characters.get(guo, {}).get('iconPath','UI_AvatarIcon_PlayerBoy_Circle')}.png"
 	)
-	embed.add_field(name="Noneと書かれている項目がある場合は？",value="1. パイモンメニュー > プロフィール編集 を開く\n2. キャラクターラインナップで表示するキャラクターを選択する\n3. キャラ詳細表示中にする\n4. パイモンメニューを閉じる\n\n反映までおよそ5分かかります。5分後を過ぎてから再度実行してください。")
 	await interaction.followup.send(embed=embed)
 
 # チャンネル入退室時の通知処理
