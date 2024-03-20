@@ -56,7 +56,7 @@ async def ping(interaction: discord.Interaction, uid: str):
 				await interaction.followup.send()
 	embed = discord.Embed(
 		title=f"{user['playerInfo']['nickname']} の情報",
-		description=f"レベル: **{user['playerInfo']['level']}**\n世界ランク: **{user['playerinfo'].get('worldLevel',None)}**\n凱旋の階層: **{user['playerInfo'].get('towerFloorIndex',None)}**\n凱旋のレベル: **{user['playerInfo'].get('towerLevelIndex',None)}**\n自己紹介: \n```\n{user['playerInfo']['signature']}\n```"
+		description=f"レベル: **{user['playerInfo']['level']}**\n世界ランク: **{user['playerInfo'].get('worldLevel',None)}**\n凱旋の階層: **{user['playerInfo'].get('towerFloorIndex',None)}**\n凱旋のレベル: **{user['playerInfo'].get('towerLevelIndex',None)}**\n自己紹介: \n```\n{user['playerInfo']['signature']}\n```"
 		)
 	embed.add_field(name="Noneと書かれている項目がある場合は？",value="1. パイモンメニュー > プロフィール編集 を開く\n2. キャラクターラインナップで表示するキャラクターを選択する\n3. キャラ詳細表示中にする\n4. パイモンメニューを閉じる\n\n反映までおよそ5分かかります。5分後を過ぎてから再度実行してください。")
 	await interaction.followup.send(embed=embed)
