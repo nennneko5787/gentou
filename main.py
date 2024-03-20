@@ -18,7 +18,7 @@ enka = EnkaNetworkAPI()
 JIHOU_CHANNEL_ID = 1208730354656084008 #チャンネルID
 
 # Database configuration
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("database")
 
 async def connect_to_database():
 	return await asyncpg.connect(DATABASE_URL)
