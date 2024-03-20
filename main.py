@@ -56,7 +56,7 @@ async def ping(interaction: discord.Interaction, uid: str):
 				await interaction.followup.send()
 		async with session.get(f'https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/pfps.json') as response:
 			if response.status != 404:
-				characters = await response.json()
+				characters = await response.json(content_type=None)
 			else:
 				embed = discord.Embed(title="ユーザーアイコンの取得に失敗しました。", description="Githubが悪い、~~ころすぞ~~")
 				await interaction.followup.send()
