@@ -7,14 +7,12 @@ from keep_alive import keep_alive
 from zoneinfo import ZoneInfo
 import psutil
 import aiohttp
-from enkanetwork import EnkaNetworkAPI
 import asyncpg
 
 intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client=client)
-enka = EnkaNetworkAPI()
 JIHOU_CHANNEL_ID = 1208730354656084008 #チャンネルID
 
 # Database configuration
@@ -96,15 +94,27 @@ async def genshin_userinfo(interaction: discord.Interaction, uid: str = None, us
 			)
 			await interaction.followup.send(embed=embed)
 			return
-
-	async with enka:
-		data = await enka.fetch_user(str(uid))
+		
+	async with aiohttp.ClientSession() as session:
+		async with session.get(f'https://enka.network/api/uid/{uid}') as response:
+			if response.status != 404:
+				user = await response.json()
+			else:
+				embed = discord.Embed(title="ユーザーが見つかりませんでした。", description="UIDが間違っていないか、確認してください。")
+				await interaction.followup.send()
+		async with session.get(f'https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/pfps.json') as response:
+			if response.status != 404:
+				characters = await response.json(content_type=None)
+			else:
+				embed = discord.Embed(title="ユーザーアイコンの取得に失敗しました。", description="Githubが悪い、~~ころすぞ~~")
+				await interaction.followup.send()
+	guo = f"{user['playerInfo'].get('profilePicture', {}).get('id', 1)}"
 	embed = discord.Embed(
 		title=f"ステータス",
-		description=f"レベル: **{data.player.level}**\n世界ランク: **{data.player.world_level}**\n螺旋: **{data.player.abyss_floor}層 {data.player.abyss_room}間**\n達成したアチーブメント数: **{data.player.achievement}**\n自己紹介: \n```\n{data.player.signature}\n```"
+		description=f"レベル: **{user['playerInfo'].get('level', None)}**\n世界ランク: **{user['playerInfo'].get('worldLevel', None)}**\n螺旋: **{user['playerInfo'].get('towerFloorIndex', None)}層 {user['playerInfo'].get('towerLevelIndex', None)}間**\n達成したアチーブメント数: **{user['playerInfo'].get('finishAchievementNum', None)}**\n自己紹介: \n```\n{user['playerInfo'].get('signature', None)}\n```"
 	).set_author(
-		name=data.player.nickname,
-		icon_url=data.player.avatar.icon.url
+		name=user['playerInfo'].get('nickname', None),
+		icon_url=f"https://enka.network/ui/{characters.get(guo, {}).get('iconPath','UI_AvatarIcon_PlayerBoy_Circle')}.png"
 	)
 	embed.add_field(name="Noneと書かれている項目がある場合は？",value="1. パイモンメニュー > プロフィール編集 を開く\n2. キャラクターラインナップで表示するキャラクターを選択する\n3. キャラ詳細表示中にする\n4. パイモンメニューを閉じる\n\n反映までおよそ5分かかります。5分後を過ぎてから再度実行してください。")
 	await interaction.followup.send(embed=embed)
