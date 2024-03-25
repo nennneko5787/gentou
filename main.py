@@ -32,7 +32,7 @@ async def on_ready():
 	change.start()
 
 @client.event
-async def on_message(message):
+async def on_message(message: discord.Message):
 	if message.author.bot:
 		return
 	if message.clean_content == 'おはよう':
@@ -41,6 +41,8 @@ async def on_message(message):
 		await message.reply('`よろしくお願いしまスた!`', mention_author=False)
 	elif message.clean_content == 'おやすみ':
 		await message.reply('https://pbs.twimg.com/media/Fj8xGYAakAAYkyy?format=png&name=small', mention_author=False)
+	elif message.clean_content == 'こんにちは' or message.clean_content == 'こん':
+		await message.reply('`こんにちはでシ!`', mention_author=False)
 
 @tree.command(name="ping", description="pingを計測します")
 async def ping(interaction: discord.Interaction):
