@@ -113,7 +113,7 @@ async def genshin_userinfo(interaction: discord.Interaction, uid: str = None, us
 	guo = f"{user['playerInfo'].get('profilePicture', {}).get('id', 1)}"
 	embed = discord.Embed(
 		title=f"ステータス",
-		description=f"レベル: **{user['playerInfo'].get('level', None)}**\n世界ランク: **{user['playerInfo'].get('worldLevel', None)}**\n螺旋: **{user['playerInfo'].get('towerFloorIndex', None)}層 {user['playerInfo'].get('towerLevelIndex', None)}間**\n達成したアチーブメント数: **{user['playerInfo'].get('finishAchievementNum', None)}**\n自己紹介: \n```\n{user['playerInfo'].get('signature', None)}\n```"
+		description=f"冒険ランク: **{user['playerInfo'].get('level', None)}**\n世界ランク: **{user['playerInfo'].get('worldLevel', None)}**\n螺旋: **{user['playerInfo'].get('towerFloorIndex', None)}層 {user['playerInfo'].get('towerLevelIndex', None)}間**\n達成したアチーブメント数: **{user['playerInfo'].get('finishAchievementNum', None)}**\n自己紹介: \n```\n{user['playerInfo'].get('signature', None)}\n```"
 	).set_author(
 		name=user['playerInfo'].get('nickname', None),
 		icon_url=f"https://enka.network/ui/{characters.get(guo, {}).get('iconPath','UI_AvatarIcon_PlayerBoy_Circle')}.png"
